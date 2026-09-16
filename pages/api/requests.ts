@@ -18,12 +18,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: error.message })
     }
 
-    // Safely handle the case where data may be null
-    if (!data || data.length === 0) {
+    // Types: data can be null according to Supabase client types.
+    // Cast to an explicit expected shape and check safely before accessing.
+    type InsertedRow = { id?: number }
+    const rows = (data as InsertedRow[] | null) ?? null
+
+    if (!rows || rows.length === 0) {
+      // No row information returned — respond with ok and null id
       return res.status(200).json({ ok: true, id: null })
     }
 
-    const insertedId = (data[0] as { id?: number }).id ?? null
+    const insertedId = rows[0].id ?? null
 
     return res.status(200).json({ ok: true, id: insertedId })
   }catch(err:any){
