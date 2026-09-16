@@ -17,8 +17,14 @@ export default function Register(){
     if(!email || !password || !name){ setError('نام، ایمیل و رمز الزامی است'); return }
     setLoading(true)
     try{
-      const res = await supabase.auth.signUp({ email, password }, { data: { full_name: name } })
-      if(res.error){ setError(res.error.message || 'خطا در ثبت‌نام') }
+      const res = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { full_name: name }
+        }
+      })
+      if((res as any).error){ setError((res as any).error.message || 'خطا در ثبت‌نام') }
       else{
         // redirect to homepage or dashboard
         router.push('/')
