@@ -11,7 +11,7 @@ export default function ProductCard({product}:{product:any}){
       <div className="text-gray-400 text-sm mt-2">{product.materials}</div>
       <div className="text-gray-400 text-sm">{product.sizes}</div>
       <div className="mt-4 flex gap-2">
-        <Link href={`/catalog/${product.slug}`} className="px-3 py-1 border rounded">مشاهده</Link>
+        <Link href={`/product/${product.id}`} className="px-3 py-1 border rounded">مشاهده</Link>
       </div>
     </article>
   )

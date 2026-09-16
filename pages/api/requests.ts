@@ -4,13 +4,30 @@ import { supabaseAdmin } from '../../lib/supabaseAdmin'
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const { name, phone, part, message } = req.body
+  const { name, phone, part, message, product_id } = req.body
   if (!name || !phone || !part) return res.status(400).json({ error: 'Missing required fields' })
 
-  try{
-    const payload = { name, phone, part, message, created_at: new Date().toISOString() }
+  // try to get user from Authorization header if provided
+  let user_id: string | null = null
+  try {
+    const authHeader = req.headers.authorization || ''
+    const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null
+    if (token) {
+      // supabaseAdmin.auth.getUser accepts { access_token } in some versions; using getUser(token) which returns { data, error }
+      const { data: userData, error: userErr } = await supabaseAdmin.auth.getUser(token as string) as any
+      if (!userErr && userData?.user?.id) {
+        user_id = userData.user.id
+      }
+    }
+  } catch (e) {
+    console.warn('Could not validate user token', e)
+  }
 
-    // Use .select('id') so Supabase returns the inserted id (and keep types clear)
+  try{
+    const payload: any = { name, phone, part, message, created_at: new Date().toISOString() }
+    if (product_id) payload.product_id = product_id
+    if (user_id) payload.user_id = user_id
+
     const { data, error } = await supabaseAdmin.from('requests').insert([payload]).select('id')
 
     if (error) {
@@ -18,17 +35,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: error.message })
     }
 
-    // Types: data can be null according to Supabase client types.
-    // Cast to an explicit expected shape and check safely before accessing.
-    type InsertedRow = { id?: number }
-    const rows = (data as InsertedRow[] | null) ?? null
-
-    if (!rows || rows.length === 0) {
-      // No row information returned — respond with ok and null id
+    if (!data || data.length === 0) {
       return res.status(200).json({ ok: true, id: null })
     }
 
-    const insertedId = rows[0].id ?? null
+    const insertedId = (data[0] as { id?: number }).id ?? null
 
     return res.status(200).json({ ok: true, id: insertedId })
   }catch(err:any){
