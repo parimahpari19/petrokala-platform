@@ -1,6 +1,7 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -12,7 +13,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet" />
         <title>پتروکالا</title>
       </Head>
-      <Component {...pageProps} />
+      <ErrorBoundary>
+        <Component {...pageProps} />
+      </ErrorBoundary>
     </>
   )
 }
