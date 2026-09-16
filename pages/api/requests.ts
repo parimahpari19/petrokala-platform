@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const authHeader = req.headers.authorization || ''
     const token = authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null
     if (token) {
-      // supabaseAdmin.auth.getUser accepts { access_token } in some versions; using getUser(token) which returns { data, error }
       const { data: userData, error: userErr } = await supabaseAdmin.auth.getUser(token as string) as any
       if (!userErr && userData?.user?.id) {
         user_id = userData.user.id
