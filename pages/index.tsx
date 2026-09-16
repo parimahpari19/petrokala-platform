@@ -6,9 +6,8 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <html lang="fa" />
         <title>پتروکالا — تأمین تجهیزات نفت، گاز و پتروشیمی</title>
-        <meta name="description" content="پتروکالا — بازار و شبکه تأمین تجهیزات نفت، گاز و پتروشیمی" />
+        <meta name="description" content="پتروکالا یک کاتالوگ تخصصی و شبکه تأمین قطعات صنعتی برای صنعت نفت، گاز و پتروشیمی است. جست‌وجو، درخواست قیمت و ارتباط مستقیم با تأمین‌کننده." />
       </Head>
 
       <Header />
@@ -21,7 +20,7 @@ export default function Home() {
 
         <section>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 bg-[#0e171e] rounded-lg">Сatalog teaser / quick links</div>
+            <div className="p-6 bg-[#0e171e] rounded-lg">Catalog teaser / quick links</div>
             <div className="p-6 bg-[#0e171e] rounded-lg">Supplier network</div>
             <div className="p-6 bg-[#0e171e] rounded-lg">How it works</div>
           </div>
